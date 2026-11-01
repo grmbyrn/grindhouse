@@ -67,8 +67,8 @@ You'll need Node 22.22 or newer, and either a local MongoDB or a free [MongoDB A
 1. Clone the repo and install the dependencies:
 
    ```bash
-   git clone https://github.com/grmbyrn/proshop.git
-   cd proshop
+   git clone https://github.com/grmbyrn/grindhouse.git
+   cd grindhouse
    npm install
    npm install --prefix frontend
    ```

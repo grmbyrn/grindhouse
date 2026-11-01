@@ -22,14 +22,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/grmbyrn/proshop.git"
+        "url": "git+https://github.com/grmbyrn/grindhouse.git"
     },
     "author": "Graeme Byrne",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/grmbyrn/proshop/issues"
+        "url": "https://github.com/grmbyrn/grindhouse/issues"
     },
-    "homepage": "https://github.com/grmbyrn/proshop#readme",
+    "homepage": "https://github.com/grmbyrn/grindhouse#readme",
     "dependencies": {
         "bcryptjs": "^3.0.3",
         "cloudinary": "^2.11.0",
