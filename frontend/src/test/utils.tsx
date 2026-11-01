@@ -50,8 +50,8 @@ export const renderWithProviders = (
 export const makeProduct = (overrides: Partial<Product> = {}): Product => ({
     _id: 'p1',
     user: 'u1',
-    name: 'Airpods',
-    image: '/images/airpods.jpg',
+    name: 'Hand Grinder',
+    image: '/images/hand-grinder.jpg',
     brand: 'Apple',
     category: 'Electronics',
     description: 'Headphones',

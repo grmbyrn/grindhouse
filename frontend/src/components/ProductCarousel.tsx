@@ -47,15 +47,20 @@ const ProductCarousel = () => {
             <CarouselContent className='ml-0'>
                 {products.map((product) => (
                     <CarouselItem key={product._id} className='pl-0'>
-                        {/* Same height at every width. From sm up the photo box is 4:3 at that height
-                        (288 × 384, 384 × 512), so it is never cropped; the text panel takes the rest. */}
-                        <div className='relative grid h-64 sm:h-72 sm:grid-cols-[1fr_auto] lg:h-96'>
+                        {/* Same height at every width. From sm up the photo sits framed inside its
+                        column at its own shape, uncropped, so close-up or portrait photos don't look
+                        oversized; the text panel takes the rest. */}
+                        <div className='relative grid h-64 sm:h-72 sm:grid-cols-[1fr_auto] sm:grid-rows-[100%] lg:h-96'>
                             <Link
                                 to={`/product/${product._id}`}
                                 tabIndex={-1}
-                                className='absolute inset-0 sm:relative sm:order-2 sm:w-96 lg:w-128'
+                                className='absolute inset-0 sm:relative sm:order-2 sm:flex sm:h-full sm:w-96 sm:items-center sm:justify-center sm:p-6 sm:pr-16 lg:w-128 lg:p-8 lg:pr-20'
                             >
-                                <img src={product.image} alt={product.name} className='size-full object-cover' />
+                                <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className='size-full object-cover sm:size-auto sm:max-h-full sm:max-w-full sm:rounded-xl sm:shadow-lg'
+                                />
                             </Link>
 
                             {/* Phones: caption over the photo */}

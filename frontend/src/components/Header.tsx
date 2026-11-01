@@ -16,7 +16,7 @@ import { useLogoutMutation } from '../slices/usersApiSlice'
 import { logout } from '../slices/authSlice'
 import SearchBox from './SearchBox'
 import ThemeToggle from './ThemeToggle'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.svg'
 import { resetCart } from '../slices/cartSlice'
 
 const adminLinks = [
@@ -74,7 +74,7 @@ const Header = () => {
                     <span className='flex size-8 items-center justify-center rounded-lg bg-neutral-900 dark:ring-1 dark:ring-white/15'>
                         <img src={logo} alt='' className='size-6' />
                     </span>
-                    ProShop
+                    Grind House
                 </Link>
 
                 <div className='ml-auto hidden w-full max-w-xs md:block'>

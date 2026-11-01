@@ -1,6 +1,6 @@
-# ProShop
+# Grind House
 
-A full-stack eCommerce store built with the MERN stack and TypeScript. Customers can browse, search and review products, check out with PayPal, and track their orders. Admins manage products, users and orders.
+A full-stack eCommerce store for coffee gear and freshly roasted beans, built with the MERN stack and TypeScript. Customers can browse, search and review products, check out with PayPal, and track their orders. Admins manage products, users and orders.
 
 **Live demo: [proshop-50w8.onrender.com](https://proshop-50w8.onrender.com)**
 
@@ -136,6 +136,11 @@ Cloudinary is required in production because Render's disk is wiped on every dep
 7. Prepared for production: startup checks for required settings, a health check route, and image uploads to Cloudinary.
 8. Added backend and frontend tests, Biome, GitHub Actions CI, code splitting for the admin pages, and React Router 8.
 9. Deployed to Render with MongoDB Atlas.
+10. Rebranded from ProShop to Grind House, with a new coffee catalogue, logo and favicon.
+
+## Credits
+
+Product photos are from Wikimedia Commons, used under Creative Commons licences. The authors and licences are listed in [docs/photo-credits.md](docs/photo-credits.md). The brands in the catalogue are made up.
 
 ## License
 
