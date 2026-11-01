@@ -1,9 +1,11 @@
-import {Table, Button, Row, Col} from 'react-bootstrap'
-import { FaEdit, FaTrash } from "react-icons/fa"
+import { Pencil, Plus, Trash2 } from "lucide-react"
 import { useParams, Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import Paginate from "../../components/Paginate"
+import ConfirmDialog from "../../components/ConfirmDialog"
 import {toast} from 'react-toastify'
 import { useGetProductsQuery, useCreateProductMutation, useDeleteProductMutation } from "../../slices/productsApiSlice"
 import { getErrorMessage } from '../../utils/getErrorMessage'
@@ -20,77 +22,92 @@ const ProductListScreen = () => {
     const [deleteProduct, {isLoading: loadingDelete}] = useDeleteProductMutation()
 
     const deleteHandler = async (id: string) => {
-        if(window.confirm('Are you sure?')){
-            try{
-                await deleteProduct(id).unwrap()
-                toast.success('Product deleted')
-                refetch()
-            } catch(error){
-                toast.error(getErrorMessage(error))
-            }
+        try{
+            await deleteProduct(id).unwrap()
+            toast.success('Product deleted')
+            refetch()
+        } catch(error){
+            toast.error(getErrorMessage(error))
         }
     }
 
     const createProductHandler = async () => {
-        if(window.confirm('Are you sure you want to create a new product?')){
-            try{
-                await createProduct().unwrap()
-                refetch()
-            } catch(error){
-                toast.error(getErrorMessage(error))
-            }
+        try{
+            await createProduct().unwrap()
+            refetch()
+        } catch(error){
+            toast.error(getErrorMessage(error))
         }
     }
 
-  return ( 
-    <>
-        <Row className="align-items-center">
-            <Col>
-                <h1>Products</h1>
-            </Col>
-            <Col className="text-end">
-                <Button className="my-3" onClick={createProductHandler}>
-                    <FaEdit /> Create Product
-                </Button>
-            </Col>
-        </Row>
+  return (
+    <div>
+        <div className="mb-6 flex items-center justify-between gap-4">
+            <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
+            <ConfirmDialog
+                trigger={
+                    <Button disabled={loadingCreate}>
+                        <Plus /> Create Product
+                    </Button>
+                }
+                title="Create a new product?"
+                description="A sample product is added to the list, ready for you to edit."
+                confirmLabel="Create"
+                onConfirm={createProductHandler}
+            />
+        </div>
 
         {loadingCreate && <Loader />}
         {loadingDelete && <Loader />}
 
         {error ? <Message variant='danger'>{getErrorMessage(error)}</Message> : !data ? <Loader /> : (
             <>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>NAME</th>
-                            <th>PRICE</th>
-                            <th>CATEGORY</th>
-                            <th>BRAND</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.products.map((product) => (
-                            <tr key={product._id}>
-                                <td>{product._id}</td>
-                                <td>{product.name}</td>
-                                <td>{product.price}</td>
-                                <td>{product.category}</td>
-                                <td>{product.brand}</td>
-                                <td>
-                                    <Link to={`/admin/product/${product._id}/edit`} className="btn btn-light btn-sm mx-2">
-                                        <FaEdit />
-                                    </Link>
-                                    <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
-                                        <FaTrash color='white' />
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <div className="rounded-xl border">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>ID</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Price</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Brand</TableHead>
+                                <TableHead><span className="sr-only">Actions</span></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {data.products.map((product) => (
+                                <TableRow key={product._id}>
+                                    <TableCell className="font-mono text-xs text-muted-foreground">{product._id}</TableCell>
+                                    <TableCell className="font-medium">{product.name}</TableCell>
+                                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                                    <TableCell>{product.category}</TableCell>
+                                    <TableCell>{product.brand}</TableCell>
+                                    <TableCell>
+                                        <div className="flex justify-end gap-1">
+                                            <Button asChild variant="ghost" size="icon-sm">
+                                                <Link to={`/admin/product/${product._id}/edit`} aria-label={`Edit ${product.name}`}>
+                                                    <Pencil />
+                                                </Link>
+                                            </Button>
+                                            <ConfirmDialog
+                                                trigger={
+                                                    <Button variant="destructive" size="icon-sm" aria-label={`Delete ${product.name}`}>
+                                                        <Trash2 />
+                                                    </Button>
+                                                }
+                                                title={`Delete ${product.name}?`}
+                                                description="This permanently removes the product. It can't be undone."
+                                                confirmLabel="Delete"
+                                                destructive
+                                                onConfirm={() => deleteHandler(product._id)}
+                                            />
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
                 <Paginate
                     pages={data.pages}
                     page={data.page}
@@ -98,7 +115,7 @@ const ProductListScreen = () => {
                 />
             </>
         )}
-    </>
+    </div>
   )
 }
 export default ProductListScreen

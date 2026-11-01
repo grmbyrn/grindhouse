@@ -1,9 +1,15 @@
 import { useState, useEffect, type FormEvent } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Form, Button } from "react-bootstrap"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
+import FormField from "../../components/FormField"
 import {toast} from 'react-toastify'
 import {
     useUpdateUserMutation,
@@ -45,59 +51,66 @@ const UserEditScreen = () => {
     }, [user])
 
   return (
-    <>
-        <Link to='/admin/userlist' className="btn btn-light my-3">
-            Go Back
-        </Link>
+    <div>
+        <Button asChild variant='ghost' className='mb-4 -ml-2.5'>
+            <Link to='/admin/userlist'><ArrowLeft />Go Back</Link>
+        </Button>
 
         <FormContainer>
-            <h1>Edit User</h1>
-            {loadingUpdate && <Loader />}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-xl font-semibold">Edit User</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {loadingUpdate && <Loader />}
 
-            {isLoading ? <Loader /> : error ? <Message variant='danger'>
-                {getErrorMessage(error)}
-            </Message> : (
-                <Form onSubmit={submitHandler}>
-                    <Form.Group controlId="name" className="my-2">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            type='text'
-                            placeholder="Enter name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                    {isLoading ? <Loader /> : error ? <Message variant='danger'>
+                        {getErrorMessage(error)}
+                    </Message> : (
+                        <form onSubmit={submitHandler} className="flex flex-col gap-4">
+                            <FormField id="name" label="Name">
+                                <Input
+                                    id="name"
+                                    type='text'
+                                    placeholder="Enter name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </FormField>
 
-                    <Form.Group controlId='email' className="my-2">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            type='email'
-                            placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                            <FormField id="email" label="Email">
+                                <Input
+                                    id="email"
+                                    type='email'
+                                    placeholder="Enter email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </FormField>
 
-                    <Form.Group controlId='isAdmin' className="my-2">
-                        <Form.Check
-                            type='checkbox'
-                            label="Is Admin"
-                            checked={isAdmin}
-                            onChange={(e) => setIsAdmin(e.target.checked)}
-                        ></Form.Check>
-                    </Form.Group>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="isAdmin"
+                                    checked={isAdmin}
+                                    onCheckedChange={(checked) => setIsAdmin(checked === true)}
+                                />
+                                <Label htmlFor="isAdmin">Is Admin</Label>
+                            </div>
 
-                    <Button
-                        type='submit'
-                        variant="primary"
-                        className="my-2"
-                    >
-                        Update
-                    </Button>
-                </Form>
-            )}
+                            <Button
+                                type='submit'
+                                size="lg"
+                                className="mt-2 w-full"
+                                disabled={loadingUpdate}
+                            >
+                                Update
+                            </Button>
+                        </form>
+                    )}
+                </CardContent>
+            </Card>
         </FormContainer>
-    </>
+    </div>
   )
 }
 export default UserEditScreen

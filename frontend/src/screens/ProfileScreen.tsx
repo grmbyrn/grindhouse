@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect, type FormEvent } from "react"
-import {Table, Form, Button, Row, Col} from 'react-bootstrap'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import {toast} from 'react-toastify'
 import Message from "../components/Message"
 import Loader from "../components/Loader"
-import {FaTimes} from 'react-icons/fa'
+import FormField from "../components/FormField"
+import StatusBadge from "../components/StatusBadge"
 import { useProfileMutation } from "../slices/usersApiSlice"
 import { setCredentials } from "../slices/authSlice"
 import {useGetMyOrdersQuery} from '../slices/ordersApiSlice'
@@ -36,7 +40,7 @@ const ProfileScreen = () => {
     const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if(password !== confirmPassword){
-            toast.error('Password do not match')
+            toast.error('Passwords do not match')
         } else {
             try{
                 const res = await updateProfile({_id: userInfo!._id, name, email, password}).unwrap()
@@ -49,108 +53,113 @@ const ProfileScreen = () => {
     }
 
   return (
-    <Row>
-        <Col md={3}>
-            <h2>User Profile</h2>
+    <div className="grid gap-8 lg:grid-cols-4">
+        <div>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg font-semibold">User Profile</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={submitHandler} className="flex flex-col gap-4">
+                        <FormField id='name' label='Name'>
+                            <Input
+                                id='name'
+                                type='text'
+                                autoComplete='name'
+                                placeholder="Enter name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </FormField>
 
-            <Form onSubmit={submitHandler}>
-                <Form.Group controlId='name' className="my-2">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                        type='name'
-                        placeholder="Enter name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                        <FormField id='email' label='Email Address'>
+                            <Input
+                                id='email'
+                                type='email'
+                                autoComplete='email'
+                                placeholder="Enter email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </FormField>
 
-                <Form.Group controlId='email' className="my-2">
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control
-                        type='email'
-                        placeholder="Enter email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                        <FormField id='password' label='Password'>
+                            <Input
+                                id='password'
+                                type='password'
+                                autoComplete='new-password'
+                                placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </FormField>
 
-                <Form.Group controlId='password' className="my-2">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type='password'
-                        placeholder="Enter password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                        <FormField id='confirmPassword' label='Confirm Password'>
+                            <Input
+                                id='confirmPassword'
+                                type='password'
+                                autoComplete='new-password'
+                                placeholder="Confirm password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                        </FormField>
 
-                <Form.Group controlId='confirmPassword' className="my-2">
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control
-                        type='password'
-                        placeholder="Confirm password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                        <Button type='submit' className="mt-2 w-full" disabled={loadingUpdateProfile}>
+                            Update
+                        </Button>
+                        {loadingUpdateProfile && <Loader />}
+                    </form>
+                </CardContent>
+            </Card>
+        </div>
 
-                <Button type='submit' variant='primary' className="my-2">
-                    Update
-                </Button>
-                {loadingUpdateProfile && <Loader />}
-            </Form>
-        </Col>
-
-        <Col md={9}>
-            <h2>My Orders</h2>
+        <div className="lg:col-span-3">
+            <h2 className="mb-4 text-xl font-semibold tracking-tight">My Orders</h2>
             {error ? (<Message variant='danger'>
                 {getErrorMessage(error)}
             </Message>) : !orders ? (
                 <Loader />
+            ) : orders.length === 0 ? (
+                <Message>You haven't placed any orders yet. <Link to='/'>Start shopping</Link></Message>
             ) : (
-                <Table striped hover responsive className="table-sm">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>DATE</th>
-                            <th>TOTAL</th>
-                            <th>PAID</th>
-                            <th>DELIVERED</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map((order) => (
-                            <tr key={order._id}>
-                                <td>{order._id}</td>
-                                <td>{formatDate(order.createdAt)}</td>
-                                <td>${order.totalPrice}</td>
-                                <td>
-                                    {order.isPaid ? (
-                                        formatDate(order.paidAt)
-                                    ) : (
-                                        <FaTimes style={{color: 'red'}} />
-                                    )}
-                                </td>
-                                <td>
-                                    {order.isDelivered ? (
-                                        formatDate(order.deliveredAt)
-                                    ) : (
-                                        <FaTimes style={{color: 'red'}} />
-                                    )}
-                                </td>
-                                <td>
-                                    <Link to={`/order/${order._id}`} className="btn btn-light btn-sm">
-                                        Details
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <div className="rounded-xl border">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>ID</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Total</TableHead>
+                                <TableHead>Paid</TableHead>
+                                <TableHead>Delivered</TableHead>
+                                <TableHead><span className="sr-only">Actions</span></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {orders.map((order) => (
+                                <TableRow key={order._id}>
+                                    <TableCell className="font-mono text-xs text-muted-foreground">{order._id}</TableCell>
+                                    <TableCell>{formatDate(order.createdAt)}</TableCell>
+                                    <TableCell className="font-medium">${order.totalPrice.toFixed(2)}</TableCell>
+                                    <TableCell>
+                                        <StatusBadge done={order.isPaid} date={order.paidAt} pendingLabel='Not paid' />
+                                    </TableCell>
+                                    <TableCell>
+                                        <StatusBadge done={order.isDelivered} date={order.deliveredAt} pendingLabel='Not delivered' />
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <Button asChild variant="outline" size="sm">
+                                            <Link to={`/order/${order._id}`}>Details</Link>
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             )}
-        </Col>
-    </Row>
+        </div>
+    </div>
   )
 }
 export default ProfileScreen

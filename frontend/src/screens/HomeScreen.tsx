@@ -1,5 +1,6 @@
-import {Row, Col} from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import Product from '../components/Product'
 import { useGetProductsQuery } from '../slices/productsApiSlice'
 import Loader from '../components/Loader'
@@ -17,13 +18,13 @@ const HomeScreen = () => {
   })
 
   return (
-    <>
+    <div>
       {!keyword ? (
         <ProductCarousel />
       ) : (
-        <Link to='/' className='btn btn-light mb-4'>
-          Go Back
-        </Link>
+        <Button asChild variant='ghost' className='mb-4 -ml-2.5'>
+          <Link to='/'><ArrowLeft />Go Back</Link>
+        </Button>
       )}
       {error ? (
         <Message variant='danger'>
@@ -33,14 +34,15 @@ const HomeScreen = () => {
         <Loader />
       ) : (
         <>
-          <h1>Latest Products</h1>
-          <Row>
+          <h1 className='mb-6 text-2xl font-semibold tracking-tight'>
+            {keyword ? `Results for “${keyword}”` : 'Latest Products'}
+          </h1>
+          {data.products.length === 0 && <Message>No products found.</Message>}
+          <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {data.products.map(product => (
-                  <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                      <Product product={product} />
-                  </Col>
+                  <Product key={product._id} product={product} />
               ))}
-          </Row>
+          </div>
           <Paginate
             pages={data.pages}
             page={data.page}
@@ -48,7 +50,7 @@ const HomeScreen = () => {
           />
         </>
       )}
-    </>
+    </div>
   )
 }
 export default HomeScreen

@@ -1,5 +1,5 @@
-import { Pagination } from "react-bootstrap"
 import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 
 interface PaginateProps {
     pages: number
@@ -11,23 +11,28 @@ interface PaginateProps {
 const Paginate = ({pages, page, isAdmin = false, keyword = ''}: PaginateProps) => {
   return (
     pages > 1 && (
-        <Pagination>
+        <nav aria-label="Pagination" className="mt-8 flex flex-wrap justify-center gap-1">
             {[...Array(pages).keys()].map(x => (
-                <Pagination.Item
+                <Button
                     key={x + 1}
-                    as={Link}
-                    to={
-                        !isAdmin
-                            ? keyword ? `/search/${keyword}/page/${x + 1}`
-                            : `/page/${x + 1}`
-                            : `/admin/productlist/${x + 1}`
-                    }
-                    active={x + 1 === page}
+                    asChild
+                    size="icon"
+                    variant={x + 1 === page ? 'default' : 'ghost'}
                 >
-                    {x + 1}
-                </Pagination.Item>
+                    <Link
+                        to={
+                            !isAdmin
+                                ? keyword ? `/search/${keyword}/page/${x + 1}`
+                                : `/page/${x + 1}`
+                                : `/admin/productlist/${x + 1}`
+                        }
+                        aria-current={x + 1 === page ? 'page' : undefined}
+                    >
+                        {x + 1}
+                    </Link>
+                </Button>
             ))}
-        </Pagination>
+        </nav>
     )
   )
 }

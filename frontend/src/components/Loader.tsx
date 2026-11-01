@@ -1,17 +1,10 @@
-import {Spinner} from 'react-bootstrap'
+import { Spinner } from '@/components/ui/spinner'
 
 const Loader = () => {
   return (
-    <Spinner
-        animation='border'
-        role='status'
-        style={{
-            width: '100px',
-            height: '100px',
-            margin: 'auto',
-            display: 'block'
-        }}
-    ></Spinner>
+    <div className='flex justify-center py-8'>
+        <Spinner className='size-10 text-muted-foreground' />
+    </div>
   )
 }
 export default Loader
