@@ -1,8 +1,10 @@
 import path from 'path'
 import express from 'express'
+import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 dotenv.config()
+import validateEnv from './config/env.js'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import { securityHeaders } from './middleware/securityMiddleware.js'
@@ -12,6 +14,7 @@ import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 const port = process.env.PORT || 5000
 
+validateEnv()
 connectDB()
 
 const app = express()
@@ -23,6 +26,12 @@ if(process.env.NODE_ENV === 'production'){
 
 // Security headers
 app.use(securityHeaders)
+
+// Health check for the host's uptime monitoring; 503 while the database is unreachable
+app.get('/api/health', (req, res) => {
+    const dbConnected = mongoose.connection.readyState === 1
+    res.status(dbConnected ? 200 : 503).json({ status: dbConnected ? 'ok' : 'unavailable', db: dbConnected ? 'connected' : 'disconnected' })
+})
 
 // Body parser middleware
 app.use(express.json())

@@ -11,7 +11,8 @@ const securityHeaders = helmet({
             scriptSrc: ["'self'", ...paypalSources],
             frameSrc: ["'self'", ...paypalSources],
             connectSrc: ["'self'", ...paypalSources],
-            imgSrc: ["'self'", 'data:', ...paypalSources]
+            // Uploaded product images are served from Cloudinary
+            imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com', ...paypalSources]
         }
     },
     crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }
