@@ -13,7 +13,7 @@
     "data:destroy": "tsx backend/seeder.ts -d",
     "typecheck": "tsc -p backend --noEmit && npm run typecheck --prefix frontend",
     "build:server": "tsc -p backend",
-    "build": "npm install --include=dev && npm run build:server && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install --include=dev && npm run build:server && npm install --include=dev --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/grmbyrn/proshop#readme",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^18.0.9",
@@ -38,7 +39,7 @@
     "multer": "^2.5.0"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "22.x"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
