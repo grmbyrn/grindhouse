@@ -3,7 +3,7 @@ const addDecimals = (num: number) => {
     return Math.round(num * 100) / 100
 }
 
-const calcPrices = (orderItems: { price: number, qty: number }[]) => {
+const calcPrices = (orderItems: { price: number; qty: number }[]) => {
     // Calculate items price
     const itemsPrice = addDecimals(orderItems.reduce((acc, item) => acc + item.price * item.qty, 0))
 

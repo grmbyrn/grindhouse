@@ -1,14 +1,14 @@
 import express from 'express'
 const router = express.Router()
-import { 
+import {
     addOrderItems,
     getMyOrders,
     getOrderById,
     updateOrderToPaid,
     updateOrderToDelivered,
-    getOrders
+    getOrders,
 } from '../controllers/orderController.js'
-import {protect, admin} from '../middleware/authMiddleware.js'
+import { protect, admin } from '../middleware/authMiddleware.js'
 
 router.route('/').post(protect, addOrderItems).get(protect, admin, getOrders)
 router.route('/mine').get(protect, getMyOrders)

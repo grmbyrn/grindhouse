@@ -23,7 +23,7 @@ const readStoredTheme = (): Theme => {
 
 const systemQuery = () => window.matchMedia('(prefers-color-scheme: dark)')
 
-export const ThemeProvider = ({children}: {children: ReactNode}) => {
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setThemeState] = useState<Theme>(readStoredTheme)
     const [systemDark, setSystemDark] = useState(() => systemQuery().matches)
 
@@ -52,11 +52,7 @@ export const ThemeProvider = ({children}: {children: ReactNode}) => {
         }
     }
 
-    return (
-        <ThemeContext value={{theme, resolvedTheme, setTheme}}>
-            {children}
-        </ThemeContext>
-    )
+    return <ThemeContext value={{ theme, resolvedTheme, setTheme }}>{children}</ThemeContext>
 }
 
 export const useTheme = () => {

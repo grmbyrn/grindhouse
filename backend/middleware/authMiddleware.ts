@@ -5,23 +5,21 @@ import User from '../models/userModel.js'
 
 // Protect routes
 const protect = asyncHandler(async (req, res, next) => {
-    let token
-
     // Read the JWT from the cookie
-    token = req.cookies.jwt
+    const token = req.cookies.jwt
 
-    if(token){
-        try{
+    if (token) {
+        try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
             const user = await User.findById(decoded.userId).select('-password')
 
-            if(!user){
+            if (!user) {
                 throw new Error('Not authorised, user not found')
             }
 
             req.user = user
             next()
-        } catch (error){
+        } catch (error) {
             console.log(error)
             res.status(401)
             throw new Error('Not authorised, token failed')
@@ -34,7 +32,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
 // Admin middleware
 const admin = (req: Request, res: Response, next: NextFunction) => {
-    if(req.user && req.user.isAdmin){
+    if (req.user?.isAdmin) {
         next()
     } else {
         res.status(401)
@@ -42,4 +40,4 @@ const admin = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export {protect, admin}
+export { protect, admin }

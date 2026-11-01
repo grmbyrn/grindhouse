@@ -1,4 +1,4 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { updateCart } from '../utils/cartUtils'
 import type { CartItem, ShippingAddress } from '../types'
 
@@ -19,7 +19,7 @@ const emptyCart: CartState = {
     itemsPrice: '0.00',
     shippingPrice: '0.00',
     taxPrice: '0.00',
-    totalPrice: '0.00'
+    totalPrice: '0.00',
 }
 
 const storedCart = localStorage.getItem('cart')
@@ -35,8 +35,8 @@ const cartSlice = createSlice({
 
             const existItem = state.cartItems.find((x) => x._id === item._id)
 
-            if(existItem){
-                state.cartItems = state.cartItems.map((x) => x._id === existItem._id ? item : x)
+            if (existItem) {
+                state.cartItems = state.cartItems.map((x) => (x._id === existItem._id ? item : x))
             } else {
                 state.cartItems = [...state.cartItems, item]
             }
@@ -60,10 +60,11 @@ const cartSlice = createSlice({
             state.cartItems = []
             return updateCart(state)
         },
-        resetCart: () => emptyCart
-    }
+        resetCart: () => emptyCart,
+    },
 })
 
-export const {addToCart, removeFromCart, saveShippingAddress, savePaymentMethod, clearCartItems, resetCart} = cartSlice.actions
+export const { addToCart, removeFromCart, saveShippingAddress, savePaymentMethod, clearCartItems, resetCart } =
+    cartSlice.actions
 
 export default cartSlice.reducer
