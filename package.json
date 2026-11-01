@@ -1,7 +1,7 @@
 {
-    "name": "proshop",
+    "name": "grind-house",
     "version": "1.0.0",
-    "description": "eCommerce application built with the mern stack",
+    "description": "Grind House: a coffee gear eCommerce store built with the MERN stack and TypeScript",
     "type": "module",
     "main": "dist/server.js",
     "scripts": {

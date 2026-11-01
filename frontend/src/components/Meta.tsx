@@ -1,7 +1,7 @@
 const Meta = ({
-    title = 'Welcome to ProShop',
-    description = 'We sell the best products for cheap',
-    keywords = 'electronics, buy electronics, cheap electronics',
+    title = 'Grind House | Coffee gear and fresh beans',
+    description = 'Grinders, brewers and freshly roasted coffee, delivered.',
+    keywords = 'coffee, coffee grinder, pour-over, french press, coffee beans',
 }) => {
     return (
         <>

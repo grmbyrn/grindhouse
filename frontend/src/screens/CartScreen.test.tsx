@@ -24,12 +24,12 @@ describe('CartScreen', () => {
         renderWithProviders(<CartScreen />, {
             route: '/cart',
             preloadedState: cartWith(
-                makeCartItem({ _id: 'a', name: 'Airpods', price: 89.99, qty: 2 }),
+                makeCartItem({ _id: 'a', name: 'Hand Grinder', price: 89.99, qty: 2 }),
                 makeCartItem({ _id: 'b', name: 'Mouse', price: 49.99, qty: 1 }),
             ),
         })
 
-        expect(screen.getByRole('link', { name: 'Airpods' })).toHaveAttribute('href', '/product/a')
+        expect(screen.getByRole('link', { name: 'Hand Grinder' })).toHaveAttribute('href', '/product/a')
         expect(screen.getByRole('link', { name: 'Mouse' })).toBeInTheDocument()
         expect(screen.getByText('Subtotal (3 items)')).toBeInTheDocument()
         expect(screen.getByText('$229.97')).toBeInTheDocument()
@@ -39,14 +39,14 @@ describe('CartScreen', () => {
         const { store } = renderWithProviders(<CartScreen />, {
             route: '/cart',
             preloadedState: cartWith(
-                makeCartItem({ _id: 'a', name: 'Airpods' }),
+                makeCartItem({ _id: 'a', name: 'Hand Grinder' }),
                 makeCartItem({ _id: 'b', name: 'Mouse' }),
             ),
         })
 
-        await userEvent.click(screen.getByRole('button', { name: 'Remove Airpods' }))
+        await userEvent.click(screen.getByRole('button', { name: 'Remove Hand Grinder' }))
 
-        expect(screen.queryByRole('link', { name: 'Airpods' })).not.toBeInTheDocument()
+        expect(screen.queryByRole('link', { name: 'Hand Grinder' })).not.toBeInTheDocument()
         expect(store.getState().cart.cartItems.map((i) => i._id)).toEqual(['b'])
     })
 

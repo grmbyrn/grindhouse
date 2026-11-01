@@ -18,7 +18,7 @@ export const uploadImage = (buffer: Buffer): Promise<string> => {
     return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
             {
-                folder: 'proshop',
+                folder: 'grind-house',
                 resource_type: 'image',
                 // Nothing in the shop shows images larger than this
                 transformation: [{ width: 1200, height: 1200, crop: 'limit' }],
