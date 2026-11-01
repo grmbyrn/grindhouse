@@ -1,33 +1,36 @@
-import {Card} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { Card, CardContent } from '@/components/ui/card'
 import Rating from './Rating'
 import type { Product as ProductType } from '../types'
 
 const Product = ({product}: {product: ProductType}) => {
   return (
-    <Card className='my-3 p-3 rounded'>
-        <Link to={`/product/${product._id}`}>
-            <Card.Img src={product.image} variant='top' />
+    <Card className='group h-full gap-0 py-0 transition-shadow hover:shadow-md'>
+        <Link to={`/product/${product._id}`} className='block overflow-hidden bg-muted'>
+            <img
+                src={product.image}
+                alt={product.name}
+                className='aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105'
+            />
         </Link>
 
-        <Card.Body>
-            <Link to={`/product/${product._id}`}>
-                <Card.Title as='div' className='product-title'>
-                    <strong>{product.name}</strong>
-                </Card.Title>
+        <CardContent className='flex flex-1 flex-col gap-2 py-4'>
+            <Link
+                to={`/product/${product._id}`}
+                className='line-clamp-2 min-h-10 font-medium text-foreground hover:underline'
+            >
+                {product.name}
             </Link>
 
-            <Card.Text as='div'>
-                <Rating
-                    value={product.rating}
-                    text={`${product.numReviews} reviews`}
-                />
-            </Card.Text>
+            <Rating
+                value={product.rating}
+                text={`${product.numReviews} reviews`}
+            />
 
-            <Card.Text as='h3'>
+            <p className='mt-auto pt-1 text-lg font-semibold'>
                 ${product.price}
-            </Card.Text>
-        </Card.Body>
+            </p>
+        </CardContent>
     </Card>
   )
 }

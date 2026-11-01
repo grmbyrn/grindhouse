@@ -9,10 +9,9 @@ import {
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { Provider } from 'react-redux'
 import store from './store'
-// import 'bootstrap/dist/css/bootstrap.min.css'
-import './assets/styles/bootstrap.custom.css'
-import './assets/styles/index.css'
+import './index.css'
 import App from './App';
+import { ThemeProvider } from './components/ThemeProvider';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import HomeScreen from './screens/HomeScreen';
@@ -66,11 +65,13 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      {/* Placeholder client ID: OrderScreen swaps in the real one before the script loads */}
-      <PayPalScriptProvider options={{ clientId: 'test' }} deferLoading={true}>
-        <RouterProvider router={router} />
-      </PayPalScriptProvider>
-    </Provider>
+    <ThemeProvider>
+      <Provider store={store}>
+        {/* Placeholder client ID: OrderScreen swaps in the real one before the script loads */}
+        <PayPalScriptProvider options={{ clientId: 'test' }} deferLoading={true}>
+          <RouterProvider router={router} />
+        </PayPalScriptProvider>
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>
 );

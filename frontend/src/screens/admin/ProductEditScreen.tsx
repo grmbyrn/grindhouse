@@ -1,9 +1,14 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Form, Button } from "react-bootstrap"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
+import FormField from "../../components/FormField"
 import {toast} from 'react-toastify'
 import {
     useUpdateProductMutation,
@@ -80,105 +85,128 @@ const ProductEditScreen = () => {
     }
 
   return (
-    <>
-        <Link to='/admin/productlist' className="btn btn-light my-3">
-            Go Back
-        </Link>
+    <div>
+        <Button asChild variant='ghost' className='mb-4 -ml-2.5'>
+            <Link to='/admin/productlist'><ArrowLeft />Go Back</Link>
+        </Button>
 
         <FormContainer>
-            <h1>Edit Product</h1>
-            {loadingUpdate && <Loader />}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-xl font-semibold">Edit Product</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {loadingUpdate && <Loader />}
 
-            {isLoading ? <Loader /> : error ? <Message variant='danger'>
-                {getErrorMessage(error)}
-            </Message> : (
-                <Form onSubmit={submitHandler}>
-                    <Form.Group controlId="name" className="my-2">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            type='text'
-                            placeholder="Enter name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                    {isLoading ? <Loader /> : error ? <Message variant='danger'>
+                        {getErrorMessage(error)}
+                    </Message> : (
+                        <form onSubmit={submitHandler} className="flex flex-col gap-4">
+                            <FormField id="name" label="Name">
+                                <Input
+                                    id="name"
+                                    type='text'
+                                    placeholder="Enter name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </FormField>
 
-                    <Form.Group controlId='price' className="my-2">
-                        <Form.Label>Price</Form.Label>
-                        <Form.Control
-                            type='number'
-                            placeholder="Enter price"
-                            value={price}
-                            onChange={(e) => setPrice(Number(e.target.value))}
-                        ></Form.Control>
-                    </Form.Group>
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <FormField id="price" label="Price">
+                                    <Input
+                                        id="price"
+                                        type='number'
+                                        min={0}
+                                        step="0.01"
+                                        placeholder="Enter price"
+                                        value={price}
+                                        onChange={(e) => setPrice(Number(e.target.value))}
+                                    />
+                                </FormField>
 
-                    <Form.Group controlId="image" className="my-2">
-                        <Form.Label>Image</Form.Label>
-                        <Form.Control
-                            type='text'
-                            placeholder="Enter image url"
-                            value={image}
-                            onChange={(e) => setImage(e.target.value)}
-                        ></Form.Control>
-                        <Form.Control
-                            type='file'
-                            onChange={uploadFileHandler}
-                        ></Form.Control>
-                    </Form.Group>
-                    {loadingUpload && <Loader />}
+                                <FormField id="countInStock" label="Count In Stock">
+                                    <Input
+                                        id="countInStock"
+                                        type='number'
+                                        min={0}
+                                        placeholder="Enter count in stock"
+                                        value={countInStock}
+                                        onChange={(e) => setCountInStock(Number(e.target.value))}
+                                    />
+                                </FormField>
+                            </div>
 
-                    <Form.Group controlId="brand" className="my-2">
-                        <Form.Label>Brand</Form.Label>
-                        <Form.Control
-                            type='text'
-                            placeholder="Enter brand"
-                            value={brand}
-                            onChange={(e) => setBrand(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                            <FormField id="image" label="Image">
+                                <div className="flex items-start gap-3">
+                                    {image && (
+                                        <img src={image} alt="" className="size-16 shrink-0 rounded-md bg-muted object-cover" />
+                                    )}
+                                    <div className="flex flex-1 flex-col gap-2">
+                                        <Input
+                                            id="image"
+                                            type='text'
+                                            placeholder="Enter image url"
+                                            value={image}
+                                            onChange={(e) => setImage(e.target.value)}
+                                        />
+                                        <Input
+                                            type='file'
+                                            accept="image/*"
+                                            aria-label="Upload image"
+                                            onChange={uploadFileHandler}
+                                        />
+                                    </div>
+                                </div>
+                            </FormField>
+                            {loadingUpload && <Loader />}
 
-                    <Form.Group controlId="countInStock" className="my-2">
-                        <Form.Label>Count In Stock</Form.Label>
-                        <Form.Control
-                            type='number'
-                            placeholder="Enter count in stock"
-                            value={countInStock}
-                            onChange={(e) => setCountInStock(Number(e.target.value))}
-                        ></Form.Control>
-                    </Form.Group>
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <FormField id="brand" label="Brand">
+                                    <Input
+                                        id="brand"
+                                        type='text'
+                                        placeholder="Enter brand"
+                                        value={brand}
+                                        onChange={(e) => setBrand(e.target.value)}
+                                    />
+                                </FormField>
 
-                    <Form.Group controlId="category" className="my-2">
-                        <Form.Label>Category</Form.Label>
-                        <Form.Control
-                            type='text'
-                            placeholder="Enter category"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                                <FormField id="category" label="Category">
+                                    <Input
+                                        id="category"
+                                        type='text'
+                                        placeholder="Enter category"
+                                        value={category}
+                                        onChange={(e) => setCategory(e.target.value)}
+                                    />
+                                </FormField>
+                            </div>
 
-                    <Form.Group controlId="description" className="my-2">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            type='text'
-                            placeholder="Enter description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                            <FormField id="description" label="Description">
+                                <Textarea
+                                    id="description"
+                                    rows={4}
+                                    placeholder="Enter description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+                            </FormField>
 
-                    <Button
-                        type='submit'
-                        variant="primary"
-                        className="my-2"
-                    >
-                        Update
-                    </Button>
-                </Form>
-            )}
+                            <Button
+                                type='submit'
+                                size="lg"
+                                className="mt-2 w-full"
+                                disabled={loadingUpdate || loadingUpload}
+                            >
+                                Update
+                            </Button>
+                        </form>
+                    )}
+                </CardContent>
+            </Card>
         </FormContainer>
-    </>
+    </div>
   )
 }
 export default ProductEditScreen

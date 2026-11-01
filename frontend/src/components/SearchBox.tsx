@@ -1,8 +1,9 @@
 import {useState, type FormEvent} from 'react'
-import {Form, Button} from 'react-bootstrap'
 import {useParams, useNavigate} from 'react-router-dom'
+import { Search } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
-const SearchBox = () => {
+const SearchBox = ({onSearch}: {onSearch?: () => void}) => {
     const navigate = useNavigate()
     const {keyword: urlKeyword} = useParams()
     const [keyword, setKeyword] = useState(urlKeyword || '')
@@ -15,29 +16,22 @@ const SearchBox = () => {
         } else {
             navigate('/')
         }
+        onSearch?.()
     }
 
   return (
-    <Form
-        onSubmit={submitHandler}
-        className='d-flex'
-    >
-        <Form.Control
-            type='text'
+    <form onSubmit={submitHandler} role='search' className='relative w-full'>
+        <Search className='pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground' />
+        <Input
+            type='search'
             name='q'
+            aria-label='Search products'
             onChange={(e) => setKeyword(e.target.value)}
             value={keyword}
-            placeholder='Search Products...'
-            className='mr-sm-2 ml-sm-5'
-        ></Form.Control>
-        <Button
-            type='submit'
-            variant='outline-light'
-            className='p-2 mx-2'
-        >
-            Search
-        </Button>
-    </Form>
+            placeholder='Search products...'
+            className='pl-8'
+        />
+    </form>
   )
 }
 export default SearchBox

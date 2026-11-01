@@ -1,8 +1,11 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import FormContainer from "../components/FormContainer"
+import FormField from "../components/FormField"
 import Loader from "../components/Loader"
 import { useRegisterMutation } from "../slices/usersApiSlice"
 import { setCredentials } from "../slices/authSlice"
@@ -49,60 +52,76 @@ const RegisterScreen = () => {
 
   return (
     <FormContainer>
-        <h1>Sign Up</h1>
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-xl font-semibold">Create an account</CardTitle>
+                <CardDescription>Sign up to start shopping.</CardDescription>
+            </CardHeader>
 
-        <Form onSubmit={submitHandler}>
-            <Form.Group controlId="name" className="my-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Enter name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-            </Form.Group>
-            <Form.Group controlId="email" className="my-3">
-                <Form.Label>Email Address</Form.Label>
-                <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </Form.Group>
+            <CardContent>
+                <form onSubmit={submitHandler} className="flex flex-col gap-4">
+                    <FormField id="name" label="Name">
+                        <Input
+                            id="name"
+                            type="text"
+                            autoComplete="name"
+                            placeholder="Enter name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </FormField>
 
-            <Form.Group controlId="password" className="my-3">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </Form.Group>
+                    <FormField id="email" label="Email Address">
+                        <Input
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder="Enter email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </FormField>
 
-            <Form.Group controlId="confirmPassword" className="my-3">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Confirm password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-            </Form.Group>
+                    <FormField id="password" label="Password">
+                        <Input
+                            id="password"
+                            type="password"
+                            autoComplete="new-password"
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </FormField>
 
-            <Button type='submit' variant='primary' className="mt-2" disabled={isLoading}>
-                Register
-            </Button>
+                    <FormField id="confirmPassword" label="Confirm Password">
+                        <Input
+                            id="confirmPassword"
+                            type="password"
+                            autoComplete="new-password"
+                            placeholder="Confirm password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </FormField>
 
-            {isLoading && <Loader />}
-        </Form>
+                    <Button type='submit' size="lg" className="mt-2 w-full" disabled={isLoading}>
+                        Register
+                    </Button>
 
-        <Row className="py-3">
-            <Col>
-                Already have an account? <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>Login</Link>
-            </Col>
-        </Row>
+                    {isLoading && <Loader />}
+                </form>
+            </CardContent>
+
+            <CardFooter className="justify-center text-sm text-muted-foreground">
+                Already have an account?&nbsp;
+                <Link
+                    to={redirect ? `/login?redirect=${redirect}` : '/login'}
+                    className="font-medium text-foreground hover:underline"
+                >
+                    Login
+                </Link>
+            </CardFooter>
+        </Card>
     </FormContainer>
   )
 }

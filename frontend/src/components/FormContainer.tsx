@@ -1,15 +1,10 @@
 import type { ReactNode } from "react"
-import { Container, Row, Col } from "react-bootstrap"
 
 const FormContainer = ({children}: {children: ReactNode}) => {
   return (
-    <Container>
-        <Row className="justify-content-md-center">
-            <Col xs={12} md={6}>
-                {children}
-            </Col>
-        </Row>
-    </Container>
+    <div className="mx-auto w-full max-w-md py-4">
+        {children}
+    </div>
   )
 }
 export default FormContainer

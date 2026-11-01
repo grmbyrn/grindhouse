@@ -1,8 +1,11 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import FormContainer from "../components/FormContainer"
+import FormField from "../components/FormField"
 import Loader from "../components/Loader"
 import { useLoginMutation } from "../slices/usersApiSlice"
 import { setCredentials } from "../slices/authSlice"
@@ -43,41 +46,54 @@ const LoginScreen = () => {
 
   return (
     <FormContainer>
-        <h1>Sign In</h1>
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-xl font-semibold">Sign In</CardTitle>
+                <CardDescription>Welcome back. Sign in to continue.</CardDescription>
+            </CardHeader>
 
-        <Form onSubmit={submitHandler}>
-            <Form.Group controlId="email" className="my-3">
-                <Form.Label>Email Address</Form.Label>
-                <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </Form.Group>
+            <CardContent>
+                <form onSubmit={submitHandler} className="flex flex-col gap-4">
+                    <FormField id="email" label="Email Address">
+                        <Input
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder="Enter email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </FormField>
 
-            <Form.Group controlId="password" className="my-3">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </Form.Group>
+                    <FormField id="password" label="Password">
+                        <Input
+                            id="password"
+                            type="password"
+                            autoComplete="current-password"
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </FormField>
 
-            <Button type='submit' variant='primary' className="mt-2" disabled={isLoading}>
-                Sign In
-            </Button>
+                    <Button type='submit' size="lg" className="mt-2 w-full" disabled={isLoading}>
+                        Sign In
+                    </Button>
 
-            {isLoading && <Loader />}
-        </Form>
+                    {isLoading && <Loader />}
+                </form>
+            </CardContent>
 
-        <Row className="py-3">
-            <Col>
-                New Customer? <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}>Register</Link>
-            </Col>
-        </Row>
+            <CardFooter className="justify-center text-sm text-muted-foreground">
+                New Customer?&nbsp;
+                <Link
+                    to={redirect ? `/register?redirect=${redirect}` : '/register'}
+                    className="font-medium text-foreground hover:underline"
+                >
+                    Register
+                </Link>
+            </CardFooter>
+        </Card>
     </FormContainer>
   )
 }

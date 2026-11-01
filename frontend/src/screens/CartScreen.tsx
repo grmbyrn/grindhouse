@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "react-router-dom"
+import { Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAppDispatch, useAppSelector } from '../hooks'
-import {Row, Col, ListGroup, Image, Form, Button, Card} from 'react-bootstrap'
-import { FaTrash } from "react-icons/fa"
 import Message from "../components/Message"
 import { addToCart, removeFromCart } from "../slices/cartSlice"
 import type { CartItem } from "../types"
@@ -12,6 +15,9 @@ const CartScreen = () => {
 
     const cart = useAppSelector((state) => state.cart)
     const {cartItems} = cart
+
+    const itemCount = cartItems.reduce((acc, item) => acc + item.qty, 0)
+    const subtotal = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)
 
     const addToCartHandler = async (product: CartItem, qty: number) => {
         dispatch(addToCart({...product, qty}))
@@ -26,80 +32,74 @@ const CartScreen = () => {
     }
 
   return (
-    <Row>
-        <Col md={8}>
-            <h1 style={{marginBottom: '20px'}}>
+    <div className="grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+            <h1 className="mb-6 text-2xl font-semibold tracking-tight">
                 Shopping Cart
             </h1>
             {cartItems.length === 0 ? (
                 <Message>
-                    Your cart is empty <Link to='/'>Go Back</Link>
+                    Your cart is empty. <Link to='/'>Go Back</Link>
                 </Message>
             ) : (
-                <ListGroup variant='flush'>
+                <ul className="divide-y border-y">
                     {cartItems.map((item) => (
-                        <ListGroup.Item key={item._id}>
-                            <Row>
-                                <Col md={2}>
-                                    <Image src={item.image} alt={item.name} fluid rounded />
-                                </Col>
-                                <Col md={3}>
-                                    <Link to={`/product/${item._id}`}>{item.name}</Link>
-                                </Col>
-                                <Col md={2}>
-                                    ${item.price}
-                                </Col>
-                                <Col md={2}>
-                                    <Form.Control
-                                        as='select'
-                                        value={item.qty}
-                                        onChange={(e) => addToCartHandler(item, Number(e.target.value))}
-                                    >
-                                        {[...Array(item.countInStock).keys()].map((x) => (
-                                            <option key={x + 1} value={x + 1}>
-                                                {x + 1}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
-                                </Col>
-                                <Col md={2}>
-                                    <Button
-                                        type='button'
-                                        variant="light"
-                                        onClick={() => removeFromCartHandler(item._id)}
-                                    >  
-                                        <FaTrash />
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
+                        <li key={item._id} className="flex items-center gap-4 py-4">
+                            <img src={item.image} alt={item.name} className="size-20 shrink-0 rounded-lg bg-muted object-cover" />
+                            <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+                                <Link to={`/product/${item._id}`} className="line-clamp-2 flex-1 font-medium hover:underline">
+                                    {item.name}
+                                </Link>
+                                <span className="text-sm font-semibold sm:w-20 sm:text-right">${item.price}</span>
+                            </div>
+                            <Select value={String(item.qty)} onValueChange={(v) => addToCartHandler(item, Number(v))}>
+                                <SelectTrigger className="w-18" aria-label={`Quantity of ${item.name}`}>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {[...Array(item.countInStock).keys()].map((x) => (
+                                        <SelectItem key={x + 1} value={String(x + 1)}>
+                                            {x + 1}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Button
+                                type='button'
+                                variant="ghost"
+                                size="icon"
+                                aria-label={`Remove ${item.name}`}
+                                onClick={() => removeFromCartHandler(item._id)}
+                            >
+                                <Trash2 />
+                            </Button>
+                        </li>
                     ))}
-                </ListGroup>
+                </ul>
             )}
-        </Col>
-        <Col md={4}>
-            <Card>
-                <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                        <h2>
-                            Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)}) items
-                        </h2>
-                        ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                        <Button
-                            type='button'
-                            className="btn-block"
-                            disabled={cartItems.length === 0}
-                            onClick={checkoutHandler}
-                        >
-                            Proceed To Checkout
-                        </Button>
-                    </ListGroup.Item>
-                </ListGroup>
+        </div>
+        <div>
+            <Card className="lg:sticky lg:top-24">
+                <CardContent className="flex flex-col gap-4">
+                    <h2 className="text-lg font-semibold">Order Summary</h2>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</span>
+                        <span className="font-semibold">${subtotal}</span>
+                    </div>
+                    <Separator />
+                    <Button
+                        type='button'
+                        size="lg"
+                        className="w-full"
+                        disabled={cartItems.length === 0}
+                        onClick={checkoutHandler}
+                    >
+                        Proceed To Checkout
+                    </Button>
+                </CardContent>
             </Card>
-        </Col>
-    </Row>
+        </div>
+    </div>
   )
 }
 export default CartScreen

@@ -1,6 +1,7 @@
 import { useEffect } from "react"
-import { Link, useParams } from "react-router-dom"
-import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap"
+import { useParams } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {toast} from 'react-toastify'
 import { useAppSelector } from '../hooks'
 import {
@@ -12,6 +13,8 @@ import {
 } from '@paypal/react-paypal-js';
 import Message from "../components/Message"
 import Loader from "../components/Loader"
+import OrderItemList from "../components/OrderItemList"
+import OrderSummary from "../components/OrderSummary"
 import {
     useGetOrderDetailsQuery,
     usePayOrderMutation,
@@ -107,21 +110,19 @@ const OrderScreen = () => {
 
   return error ? <Message variant='danger'>{getErrorMessage(error)}</Message>
   : !order ? <Loader /> : (
-    <>
-        <h1>Order {order._id}</h1>
-        <Row>
-            <Col md={8}>
-                <ListGroup variant="flash">
-                    <ListGroup.Item>
-                        <h2>Shipping</h2>
+    <div>
+        <h1 className="mb-6 text-2xl font-semibold tracking-tight">
+            Order <span className="font-mono text-base font-normal break-all text-muted-foreground">#{order._id}</span>
+        </h1>
+        <div className="grid gap-8 lg:grid-cols-3">
+            <div className="flex flex-col gap-6 lg:col-span-2">
+                <Card>
+                    <CardContent className="flex flex-col gap-2 text-sm">
+                        <h2 className="text-lg font-semibold">Shipping</h2>
+                        <p><span className="text-muted-foreground">Name:</span> {order.user.name}</p>
+                        <p><span className="text-muted-foreground">Email:</span> {order.user.email}</p>
                         <p>
-                            <strong>Name: </strong> {order.user.name}
-                        </p>
-                        <p>
-                            <strong>Email: </strong> {order.user.email}
-                        </p>
-                        <p>
-                            <strong>Address: </strong>
+                            <span className="text-muted-foreground">Address:</span>{' '}
                             {order.shippingAddress.address}, {order.shippingAddress.city}{' '} {order.shippingAddress.postalCode}, {order.shippingAddress.country}
                         </p>
                         {order.isDelivered ? (
@@ -133,14 +134,13 @@ const OrderScreen = () => {
                                 Not Delivered
                             </Message>
                         )}
-                    </ListGroup.Item>
+                    </CardContent>
+                </Card>
 
-                    <ListGroup.Item>
-                        <h2>Payment Method</h2>
-                        <p>
-                            <strong>Method: </strong>
-                            {order.paymentMethod}
-                        </p>
+                <Card>
+                    <CardContent className="flex flex-col gap-2 text-sm">
+                        <h2 className="text-lg font-semibold">Payment Method</h2>
+                        <p><span className="text-muted-foreground">Method:</span> {order.paymentMethod}</p>
                         {order.isPaid ? (
                             <Message variant='success'>
                                 Paid on {formatDateTime(order.paidAt)}
@@ -150,102 +150,68 @@ const OrderScreen = () => {
                                 Not Paid
                             </Message>
                         )}
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                        <h2>Order Items</h2>
-                        {order.orderItems.map((item, index) => (
-                            <ListGroup.Item key={index}>
-                                <Row>
-                                    <Col md={1}>
-                                        <Image src={item.image} alt={item.name} fluid rounded />
-                                    </Col>
-                                    <Col>
-                                        <Link to={`/product/${item.product}`}>
-                                            {item.name}
-                                        </Link>
-                                    </Col>
-                                    <Col md={4}>
-                                        {item.qty} x ${item.price} = ${item.qty * item.price}
-                                    </Col>
-                                </Row>
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup.Item>
-                </ListGroup>
-            </Col>
-            <Col md={4}>
-                <Card>
-                    <ListGroup variant='flush'>
-                        <ListGroup.Item>
-                            <h2>Order Summary</h2>
-                        </ListGroup.Item>
-
-                        <ListGroup.Item>
-                            <Row>
-                                <Col>Items</Col>
-                                <Col>${order.itemsPrice}</Col>
-                            </Row>
-
-                            <Row>
-                                <Col>Shipping</Col>
-                                <Col>${order.shippingPrice}</Col>
-                            </Row>
-
-                            <Row>
-                                <Col>Tax</Col>
-                                <Col>${order.taxPrice}</Col>
-                            </Row>
-
-                            <Row>
-                                <Col>Total</Col>
-                                <Col>${order.totalPrice}</Col>
-                            </Row>
-                        </ListGroup.Item>
-                        {!order.isPaid && (
-                            <ListGroup.Item>
-                                {loadingPay && <Loader />}
-
-                                {isPending ? (
-                                    <Loader />
-                                ) : (
-                                    <div>
-                                        {/* THIS BUTTON IS FOR TESTING! REMOVE BEFORE PRODUCTION! */}
-                                        {/* <Button
-                                            style={{ marginBottom: '10px' }}
-                                            onClick={onApproveTest}
-                                        >
-                                            Test Pay Order
-                                        </Button> */}
-
-                                        <div>
-                                            <PayPalButtons
-                                                createOrder={createOrder}
-                                                onApprove={onApprove}
-                                                onError={onError}
-                                            ></PayPalButtons>
-                                        </div>
-                                    </div>
-                                )}
-                            </ListGroup.Item>
-                        )}
-                        {loadingDeliver && <Loader />}
-                        {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
-                            <ListGroup.Item>
-                                <Button
-                                    type='button'
-                                    className="btn btn-block"
-                                    onClick={deliverOrderHandler}
-                                >
-                                    Mark As Delivered
-                                </Button>
-                            </ListGroup.Item>
-                        )}
-                    </ListGroup>
+                    </CardContent>
                 </Card>
-            </Col>
-        </Row>
-    </>
+
+                <Card>
+                    <CardContent className="flex flex-col gap-2">
+                        <h2 className="text-lg font-semibold">Order Items</h2>
+                        <OrderItemList
+                            items={order.orderItems.map(item => ({...item, productId: item.product}))}
+                        />
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div>
+                <OrderSummary
+                    itemsPrice={order.itemsPrice}
+                    shippingPrice={order.shippingPrice}
+                    taxPrice={order.taxPrice}
+                    totalPrice={order.totalPrice}
+                >
+                    {!order.isPaid && (
+                        <>
+                            {loadingPay && <Loader />}
+
+                            {isPending ? (
+                                <Loader />
+                            ) : (
+                                // Own stacking context so PayPal's iframes stay under the sticky header
+                                <div className="relative z-0">
+                                    {/* THIS BUTTON IS FOR TESTING! REMOVE BEFORE PRODUCTION! */}
+                                    {/* <Button
+                                        className="mb-2.5 w-full"
+                                        onClick={onApproveTest}
+                                    >
+                                        Test Pay Order
+                                    </Button> */}
+
+                                    <PayPalButtons
+                                        createOrder={createOrder}
+                                        onApprove={onApprove}
+                                        onError={onError}
+                                    ></PayPalButtons>
+                                </div>
+                            )}
+                        </>
+                    )}
+                    {loadingDeliver && <Loader />}
+                    {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                        <Button
+                            type='button'
+                            size="lg"
+                            className="w-full"
+                            disabled={loadingDeliver}
+                            onClick={deliverOrderHandler}
+                        >
+                            Mark As Delivered
+                        </Button>
+                    )}
+                </OrderSummary>
+            </div>
+        </div>
+    </div>
   )
 }
 export default OrderScreen

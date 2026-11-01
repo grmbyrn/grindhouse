@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from 'react'
-import {Form, Button} from 'react-bootstrap'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import FormContainer from "../components/FormContainer"
+import FormField from "../components/FormField"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { saveShippingAddress } from "../slices/cartSlice"
@@ -14,12 +17,12 @@ const ShippingScreen = () => {
     const [city, setCity] = useState(shippingAddress?.city || '')
     const [postalCode, setPostalCode] = useState(shippingAddress?.postalCode || '')
     const [country, setCountry] = useState(shippingAddress?.country || '')
-    
-    
+
+
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    
-    
+
+
     const submitHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         dispatch(saveShippingAddress({address, city, postalCode, country}))
@@ -29,51 +32,58 @@ const ShippingScreen = () => {
   return (
     <FormContainer>
         <CheckoutSteps step1 step2 />
-        <h1>Shipping</h1>
-
-        <Form onSubmit={submitHandler}>
-            <Form.Group controlId='address' className="my-2">
-                <Form.Label>Address</Form.Label>
-                <Form.Control
-                    type='text'
-                    placeholder='Enter address'
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                >
-                </Form.Control>
-            </Form.Group>
-            <Form.Group controlId='city' className="my-2">
-                <Form.Label>City</Form.Label>
-                <Form.Control
-                    type='text'
-                    placeholder='Enter city'
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                >
-                </Form.Control>
-            </Form.Group>
-            <Form.Group controlId='postalCode' className="my-2">
-                <Form.Label>Postal Code</Form.Label>
-                <Form.Control
-                    type='text'
-                    placeholder='Enter postal code'
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                >
-                </Form.Control>
-            </Form.Group>
-            <Form.Group controlId='country' className="my-2">
-                <Form.Label>Country</Form.Label>
-                <Form.Control
-                    type='text'
-                    placeholder='Enter country'
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                >
-                </Form.Control>
-            </Form.Group>
-            <Button type='submit' variant='primary' className="my-2">Continue</Button>
-        </Form>
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-xl font-semibold">Shipping</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={submitHandler} className="flex flex-col gap-4">
+                    <FormField id='address' label='Address'>
+                        <Input
+                            id='address'
+                            type='text'
+                            autoComplete='street-address'
+                            placeholder='Enter address'
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                    </FormField>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <FormField id='city' label='City'>
+                            <Input
+                                id='city'
+                                type='text'
+                                autoComplete='address-level2'
+                                placeholder='Enter city'
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                            />
+                        </FormField>
+                        <FormField id='postalCode' label='Postal Code'>
+                            <Input
+                                id='postalCode'
+                                type='text'
+                                autoComplete='postal-code'
+                                placeholder='Enter postal code'
+                                value={postalCode}
+                                onChange={(e) => setPostalCode(e.target.value)}
+                            />
+                        </FormField>
+                    </div>
+                    <FormField id='country' label='Country'>
+                        <Input
+                            id='country'
+                            type='text'
+                            autoComplete='country-name'
+                            placeholder='Enter country'
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}
+                        />
+                    </FormField>
+                    <Button type='submit' size="lg" className="mt-2 w-full">Continue</Button>
+                </form>
+            </CardContent>
+        </Card>
     </FormContainer>
   )
 }
