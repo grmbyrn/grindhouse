@@ -17,14 +17,14 @@ const icons: Record<Variant, typeof Info> = {
     danger: CircleAlert,
 }
 
-const Message = ({variant = 'info', children}: {variant?: Variant, children: ReactNode}) => {
-  const Icon = icons[variant]
-  return (
-    <Alert className={cn('my-3', styles[variant])}>
-        <Icon />
-        <AlertDescription className='text-current/90'>{children}</AlertDescription>
-    </Alert>
-  )
+const Message = ({ variant = 'info', children }: { variant?: Variant; children: ReactNode }) => {
+    const Icon = icons[variant]
+    return (
+        <Alert className={cn('my-3', styles[variant])}>
+            <Icon />
+            <AlertDescription className='text-current/90'>{children}</AlertDescription>
+        </Alert>
+    )
 }
 
 export default Message

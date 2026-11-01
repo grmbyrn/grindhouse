@@ -10,22 +10,22 @@ const getPayPalAccessToken = async () => {
         method: 'POST',
         headers: {
             Authorization: `Basic ${auth}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'grant_type=client_credentials'
+        body: 'grant_type=client_credentials',
     })
 
-    if(!response.ok){
+    if (!response.ok) {
         throw new Error('Failed to get PayPal access token')
     }
 
-    const data = await response.json() as { access_token: string }
+    const data = (await response.json()) as { access_token: string }
     return data.access_token
 }
 
 interface PayPalOrder {
     status: string
-    purchase_units: { amount: { currency_code: string, value: string } }[]
+    purchase_units: { amount: { currency_code: string; value: string } }[]
 }
 
 // Ask PayPal whether a payment really went through, rather than trusting the browser
@@ -34,19 +34,19 @@ const verifyPayPalPayment = async (paypalOrderId: string) => {
 
     const response = await fetch(`${paypalApiUrl()}/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}`, {
         headers: {
-            Authorization: `Bearer ${accessToken}`
-        }
+            Authorization: `Bearer ${accessToken}`,
+        },
     })
 
-    if(!response.ok){
+    if (!response.ok) {
         throw new Error('Failed to verify payment')
     }
 
-    const data = await response.json() as PayPalOrder
+    const data = (await response.json()) as PayPalOrder
     return {
         verified: data.status === 'COMPLETED',
         value: data.purchase_units[0]?.amount.value,
-        currency: data.purchase_units[0]?.amount.currency_code
+        currency: data.purchase_units[0]?.amount.currency_code,
     }
 }
 

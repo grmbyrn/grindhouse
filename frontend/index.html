@@ -8,9 +8,9 @@
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <!-- Apply the saved or OS theme before first paint to avoid a flash (see ThemeProvider) -->
     <script>
-      (function () {
+      (() => {
         var theme = null;
-        try { theme = localStorage.getItem('theme'); } catch (e) {}
+        try { theme = localStorage.getItem('theme'); } catch {}
         var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
         if (dark) document.documentElement.classList.add('dark');
         document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
@@ -20,8 +20,6 @@
       name="description"
       content="ProShop eCommerce store"
     />
-    <link rel="apple-touch-icon" href="/logo192.png" />
-    <link rel="manifest" href="/manifest.json" />
     <title>ProShop</title>
   </head>
   <body>

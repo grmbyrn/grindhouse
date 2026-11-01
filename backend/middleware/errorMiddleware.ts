@@ -6,14 +6,14 @@ const notFound = (req: Request, res: Response, next: NextFunction) => {
     next(error)
 }
 
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    let statusCode = res.statusCode === 200 ? 500 : res.statusCode
-    let message = err.message
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode
+    const message = err.message
 
     res.status(statusCode).json({
         message,
-        stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
+        stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
     })
 }
 
-export {notFound, errorHandler}
+export { notFound, errorHandler }

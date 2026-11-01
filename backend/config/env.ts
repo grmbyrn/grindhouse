@@ -15,23 +15,24 @@ const validateEnv = () => {
 
     // Uploads need Cloudinary in production because the host's disk doesn't survive a redeploy
     const required = isProduction ? [...REQUIRED, ...CLOUDINARY_VARS] : REQUIRED
-    const missing = required.filter(name => !process.env[name]?.trim())
-    if(missing.length > 0){
+    const missing = required.filter((name) => !process.env[name]?.trim())
+    if (missing.length > 0) {
         errors.push(`Missing required environment variables: ${missing.join(', ')}`)
     }
 
     const secret = process.env.JWT_SECRET
-    if(secret && (secret.length < MIN_SECRET_LENGTH || PLACEHOLDER_SECRETS.includes(secret))){
-        const message = `JWT_SECRET is too weak (use at least ${MIN_SECRET_LENGTH} random characters). Generate one with:\n` +
+    if (secret && (secret.length < MIN_SECRET_LENGTH || PLACEHOLDER_SECRETS.includes(secret))) {
+        const message =
+            `JWT_SECRET is too weak (use at least ${MIN_SECRET_LENGTH} random characters). Generate one with:\n` +
             `  node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
-        if(isProduction){
+        if (isProduction) {
             errors.push(message)
         } else {
             console.warn(`Warning: ${message}`)
         }
     }
 
-    if(errors.length > 0){
+    if (errors.length > 0) {
         console.error(`Invalid configuration:\n- ${errors.join('\n- ')}`)
         process.exit(1)
     }

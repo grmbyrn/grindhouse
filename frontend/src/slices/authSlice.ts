@@ -1,4 +1,4 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { UserInfo } from '../types'
 
 interface AuthState {
@@ -8,7 +8,7 @@ interface AuthState {
 const storedUserInfo = localStorage.getItem('userInfo')
 
 const initialState: AuthState = {
-    userInfo: storedUserInfo ? JSON.parse(storedUserInfo) : null
+    userInfo: storedUserInfo ? JSON.parse(storedUserInfo) : null,
 }
 
 const authSlice = createSlice({
@@ -22,10 +22,10 @@ const authSlice = createSlice({
         logout: (state) => {
             state.userInfo = null
             localStorage.clear()
-        }
-    }
+        },
+    },
 })
 
-export const {setCredentials, logout} = authSlice.actions
+export const { setCredentials, logout } = authSlice.actions
 
 export default authSlice.reducer

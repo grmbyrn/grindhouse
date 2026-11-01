@@ -1,54 +1,69 @@
 {
-  "name": "proshop",
-  "version": "1.0.0",
-  "description": "eCommerce application built with the mern stack",
-  "type": "module",
-  "main": "dist/server.js",
-  "scripts": {
-    "start": "node dist/server.js",
-    "server": "tsx watch backend/server.ts",
-    "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import": "tsx backend/seeder.ts",
-    "data:destroy": "tsx backend/seeder.ts -d",
-    "typecheck": "tsc -p backend --noEmit && npm run typecheck --prefix frontend",
-    "build:server": "tsc -p backend",
-    "build": "npm install --include=dev && npm run build:server && npm install --include=dev --prefix frontend && npm run build --prefix frontend"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/grmbyrn/proshop.git"
-  },
-  "author": "Graeme Byrne",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/grmbyrn/proshop/issues"
-  },
-  "homepage": "https://github.com/grmbyrn/proshop#readme",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cloudinary": "^2.11.0",
-    "colors": "^1.4.0",
-    "cookie-parser": "^1.4.7",
-    "dotenv": "^18.0.9",
-    "express": "^5.3.0",
-    "express-rate-limit": "^8.7.2",
-    "helmet": "^8.3.0",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.11.4",
-    "multer": "^2.5.0"
-  },
-  "engines": {
-    "node": "22.x"
-  },
-  "devDependencies": {
-    "@types/cookie-parser": "^1.4.10",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^2.3.0",
-    "@types/node": "^22.20.5",
-    "concurrently": "^10.0.6",
-    "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
-  }
+    "name": "proshop",
+    "version": "1.0.0",
+    "description": "eCommerce application built with the mern stack",
+    "type": "module",
+    "main": "dist/server.js",
+    "scripts": {
+        "start": "node dist/server.js",
+        "server": "tsx watch backend/server.ts",
+        "client": "npm start --prefix frontend",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "data:import": "tsx backend/seeder.ts",
+        "data:destroy": "tsx backend/seeder.ts -d",
+        "typecheck": "tsc -p backend --noEmit && tsc -p backend/tests && npm run typecheck --prefix frontend",
+        "build:server": "tsc -p backend",
+        "build": "npm install --include=dev && npm run build:server && npm install --include=dev --prefix frontend && npm run build --prefix frontend",
+        "test": "vitest run && npm test --prefix frontend",
+        "test:watch": "vitest",
+        "lint": "biome lint .",
+        "format": "biome format --write .",
+        "check": "biome check ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/grmbyrn/proshop.git"
+    },
+    "author": "Graeme Byrne",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/grmbyrn/proshop/issues"
+    },
+    "homepage": "https://github.com/grmbyrn/proshop#readme",
+    "dependencies": {
+        "bcryptjs": "^3.0.3",
+        "cloudinary": "^2.11.0",
+        "colors": "^1.4.0",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^18.0.9",
+        "express": "^5.3.0",
+        "express-rate-limit": "^8.7.2",
+        "helmet": "^8.3.0",
+        "jsonwebtoken": "^9.0.3",
+        "mongoose": "^9.11.4",
+        "multer": "^2.5.0"
+    },
+    "engines": {
+        "node": "22.x"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.6.4",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/express": "^5.0.6",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/multer": "^2.3.0",
+        "@types/node": "^22.20.5",
+        "@types/supertest": "^7.2.1",
+        "concurrently": "^10.0.6",
+        "mongodb-memory-server": "^11.3.0",
+        "supertest": "^7.3.1",
+        "tsx": "^4.23.15",
+        "typescript": "^7.0.2",
+        "vitest": "^5.0.5"
+    },
+    "config": {
+        "mongodbMemoryServer": {
+            "version": "7.0.14"
+        }
+    }
 }
