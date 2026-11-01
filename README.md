@@ -2,7 +2,7 @@
 
 A full-stack eCommerce store for coffee gear and freshly roasted beans, built with the MERN stack and TypeScript. Customers can browse, search and review products, check out with PayPal, and track their orders. Admins manage products, users and orders.
 
-**Live demo: [proshop-50w8.onrender.com](https://proshop-50w8.onrender.com)**
+**Live demo: [grindhouse.onrender.com](https://grindhouse.onrender.com)**
 
 > Hosted on Render's free tier. If nobody has visited for a while, the first page load can take up to a minute while the server wakes up.
 
